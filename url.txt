@@ -1,1 +1,5 @@
 https://share.streamlit.io/
+
+https://github.com/hid30/Proyek_Analisis_Data_Deosa/blob/main/Proyek_Analisis_Data.ipynb
+
+https://proyekvisualisasidata.streamlit.app/
