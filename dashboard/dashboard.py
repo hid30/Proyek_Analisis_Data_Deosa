@@ -89,5 +89,114 @@ ax.set_title("Distribusi Peminjaman Sepeda pada Hari Kerja vs Akhir Pekan")
 st.pyplot(fig)
 
 
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load Dataset
+df = pd.read_csv("your_dataset.csv")  # Ganti dengan nama dataset yang sesuai
+
+# Data Assessment
+st.subheader("Assessing Data: Cek Informasi Dataset")
+st.write("Data Assessing dilakukan untuk memastikan data bersih, lengkap, dan valid.")
+
+st.write(df.info())
+st.write("Jumlah Missing Value:")
+st.write(df.isnull().sum())
+
+# Data Cleaning
+df['dteday'] = pd.to_datetime(df['dteday'])
+weather_map = {1: 'Cerah', 2: 'Berkabut', 3: 'Hujan Ringan', 4: 'Hujan Berat'}
+df['weather_desc'] = df['weathersit'].map(weather_map)
+df['is_weekend'] = df['weekday'].apply(lambda x: 'Weekend' if x >= 5 else 'Weekday')
+
+st.subheader("Cleaning Data")
+st.write("Proses membersihkan dataset dari error, data yang hilang, atau inkonsistensi agar siap untuk analisis.")
+st.write(df[['dteday', 'weather_desc', 'is_weekend', 'cnt']].head())
+
+# Exploratory Data Analysis (EDA)
+st.subheader("Exploratory Data Analysis (EDA)")
+
+st.write("### Pertanyaan 1: Pengaruh Cuaca terhadap Jumlah Sepeda yang Disewa")
+weather_impact = df.groupby('weather_desc')['cnt'].agg(['mean', 'median', 'std']).reset_index()
+st.write(weather_impact)
+
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.barplot(x='weather_desc', y='mean', data=weather_impact, palette='Blues_d', ax=ax)
+ax.set_title("Rata-rata Penyewaan Sepeda Berdasarkan Cuaca")
+ax.set_xlabel("Kondisi Cuaca")
+ax.set_ylabel("Jumlah Penyewaan (Rata-rata)")
+st.pyplot(fig)
+
+st.write("**Insight:** Penyewaan tertinggi saat cuaca cerah dan berkabut. Penyewaan menurun drastis saat hujan.")
+
+st.write("### Pertanyaan 2: Perbedaan Pola Penyewaan pada Hari Kerja dan Hari Libur")
+day_type_impact = df.groupby(['workingday', 'holiday'])['cnt'].agg(['mean', 'median', 'std']).reset_index()
+st.write(day_type_impact)
+
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.barplot(x='is_weekend', y='cnt', data=df, estimator=sum, palette='Blues', ax=ax)
+ax.set_title("Rata-rata Penyewaan Sepeda: Weekday vs Weekend")
+ax.set_xlabel("Tipe Hari")
+ax.set_ylabel("Jumlah Penyewaan (Rata-rata)")
+st.pyplot(fig)
+
+st.write("**Insight:** Penyewaan lebih tinggi pada hari kerja, menunjukkan penggunaan utama untuk transportasi.")
+
+# Analisis Lanjutan
+st.subheader("Analisis Lanjutan")
+
+st.write("### Pertanyaan 3: Distribusi Penyewaan Sepeda Sepanjang Hari")
+hourly_rentals = df.groupby('hr')['cnt'].describe()
+st.write(hourly_rentals)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.lineplot(x='hr', y='cnt', data=df, estimator='mean', marker='o', ax=ax)
+ax.set_title("Distribusi Penyewaan Sepeda Sepanjang Hari")
+ax.set_xlabel("Jam")
+ax.set_ylabel("Jumlah Penyewaan")
+st.pyplot(fig)
+
+st.write("**Insight:** Puncak penyewaan terjadi pada pukul 08:00 dan 17:00, menunjukkan pola kerja kantoran.")
+
+st.write("### Pertanyaan 4: Pengaruh Kecepatan Angin terhadap Penyewaan Sepeda")
+windspeed_correlation = df[['windspeed', 'cnt']].corr().iloc[0, 1]
+st.write(f"Korelasi antara Kecepatan Angin dan Penyewaan: {windspeed_correlation:.2f}")
+
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.scatterplot(x='windspeed', y='cnt', data=df, alpha=0.5, ax=ax)
+ax.set_title("Hubungan Kecepatan Angin dengan Penyewaan Sepeda")
+ax.set_xlabel("Kecepatan Angin")
+ax.set_ylabel("Jumlah Penyewaan")
+st.pyplot(fig)
+
+st.write("**Insight:** Kecepatan angin memiliki korelasi lemah terhadap jumlah penyewaan sepeda.")
+
+st.write("### Pertanyaan 5: Tren Penyewaan Sepeda Setiap Bulan")
+df['month'] = df['dteday'].dt.month
+monthly_rentals = df.groupby('month')['cnt'].mean().reset_index()
+st.write(monthly_rentals)
+
+fig, ax = plt.subplots(figsize=(10, 5))
+sns.lineplot(x='month', y='cnt', data=monthly_rentals, marker='o', ax=ax)
+ax.set_title("Tren Penyewaan Sepeda Berdasarkan Bulan")
+ax.set_xlabel("Bulan")
+ax.set_ylabel("Jumlah Penyewaan (Rata-rata)")
+st.pyplot(fig)
+
+st.write("**Insight:** Penyewaan meningkat dari awal tahun dan mencapai puncaknya di bulan September.")
+
+# Kesimpulan
+st.subheader("Kesimpulan")
+st.write("1. **Cuaca sangat memengaruhi penyewaan sepeda.** Penyewaan tertinggi terjadi saat cuaca cerah, sedangkan hujan berat mengurangi penyewaan drastis.")
+st.write("2. **Penyewaan lebih tinggi pada hari kerja dibanding akhir pekan.** Hal ini menunjukkan bahwa sebagian besar pengguna memanfaatkan sepeda untuk keperluan transportasi harian.")
+st.write("3. **Puncak penyewaan terjadi pada jam sibuk (08:00 dan 17:00).** Tren ini konsisten dengan penggunaan sepeda untuk transportasi kerja.")
+st.write("4. **Kecepatan angin memiliki dampak yang sangat kecil terhadap penyewaan sepeda.**")
+st.write("5. **Tren bulanan menunjukkan peningkatan jumlah penyewaan hingga bulan September, kemudian menurun.**")
+
+st.write("📌 **Rekomendasi Bisnis:** Penyedia layanan dapat mempertimbangkan promosi di hari hujan, paket langganan untuk pekerja, serta peningkatan jumlah sepeda di bulan dengan permintaan tinggi.")
+
+
 
 
