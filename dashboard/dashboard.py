@@ -25,8 +25,8 @@ profile_image_url = "https://raw.githubusercontent.com/andriansyah2501/appslaska
 st.sidebar.image(profile_image_url, caption="Andrian Syah", width=250)
 
 # Load data
-github_url_day = "https://raw.githubusercontent.com/andriansyah2501/appslaskarai/main/dashboard/day.csv"
-github_url_hour = "https://raw.githubusercontent.com/andriansyah2501/appslaskarai/main/dashboard/hour.csv"
+github_url_day = "https://raw.githubusercontent.com/hid30/Proyek_Analisis_Data_Deosa/main/dashboard/day.csv"
+github_url_hour = "https://raw.githubusercontent.com/hid30/Proyek_Analisis_Data_Deosa/main/dashboard/hour.csv"
 day_df = pd.read_csv(github_url_day)
 hour_df = pd.read_csv(github_url_hour)
 
