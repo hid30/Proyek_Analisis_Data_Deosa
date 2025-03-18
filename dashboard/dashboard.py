@@ -89,13 +89,7 @@ ax.set_title("Distribusi Peminjaman Sepeda pada Hari Kerja vs Akhir Pekan")
 st.pyplot(fig)
 
 
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 
-# Load Dataset
-df = pd.read_csv("your_dataset.csv")  # Ganti dengan nama dataset yang sesuai
 
 # Data Assessment
 st.subheader("Assessing Data: Cek Informasi Dataset")
