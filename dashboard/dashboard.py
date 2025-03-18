@@ -153,57 +153,6 @@ plt.show()
 st.write("- Viusalisasi 1: Penyewaan sepeda paling tinggi terjadi saat cuaca cerah dan berkabut, sedangkan saat hujan ringan dan hujan berat, jumlah penyewaan turun drastis, menunjukkan bahwa cuaca buruk secara signifikan mengurangi minat penyewaan.")
 st.write("- Visualisasi 2: Dari grafik, terlihat bahwa rata-rata penyewaan sepeda pada akhir pekan sedikit lebih tinggi dibandingkan hari kerja, menunjukkan bahwa selain digunakan untuk transportasi harian, sepeda juga diminati untuk aktivitas rekreasi di akhir pekan.")
 
-st.write("Analisis Lanjutan (Opsional)")
-"""
-
-st.write(" Pertanyaan 3: Bagaimana distribusi jumlah penyewaan sepeda sepanjang hari?")
-hourly_rentals = df.groupby('hr')['cnt'].describe()
-print("\nDistribusi Jumlah Penyewaan Sepeda Sepanjang Hari:")
-print(hourly_rentals)
-
-st.write("Pertanyaan 4: Seberapa besar pengaruh kecepatan angin (windspeed) terhadap jumlah penyewaan sepeda?")
-windspeed_correlation = df[['windspeed', 'cnt']].corr().iloc[0, 1]
-print(f"\nKorelasi antara Kecepatan Angin dan Penyewaan: {windspeed_correlation:.2f}")
-
-st.write("Pertanyaan 5: Bagaimana tren penyewaan sepeda setiap bulan?")
-df['month'] = pd.to_datetime(df['dteday']).dt.month  # Pastikan 'dteday' bertipe datetime
-monthly_rentals = df.groupby('month')['cnt'].mean().reset_index()
-print("\nRata-rata Penyewaan Berdasarkan Bulan:")
-print(monthly_rentals)
-
-st.write("Pola Penyewaan Sepeda Berdasarkan Jam")
-Penyewaan sepeda mencapai puncak pada pukul 08:00 (359 penyewaan) dan 17:00 (461 penyewaan), menunjukkan pola penggunaan utama untuk perjalanan pagi dan sore hari, kemungkinan terkait dengan aktivitas kerja dan pulang kerja.")
-Hubungan Kecepatan Angin dengan Penyewaan Sepeda
-
-st.write("Korelasi antara kecepatan angin dan jumlah penyewaan** sangat lemah (0.01), menunjukkan bahwa faktor ini hampir tidak berpengaruh terhadap keputusan pengguna dalam menyewa sepeda.")
-Tren Penyewaan Sepeda Berdasarkan Bulan")
-
-st.write("Penyewaan meningkat dari awal tahun hingga mencapai** puncaknya pada bulan September (462 penyewaan), kemudian menurun setelah bulan Oktober, kemungkinan dipengaruhi oleh faktor musiman atau perubahan pola aktivitas")
-st.write("Conclusion")
-
-st.write("1: Pengaruh Kondisi Cuaca terhadap Penyewaan Sepeda")
-
-st.write("Berdasarkan analisis jumlah penyewaan sepeda terhadap kondisi cuaca, terdapat tren yang jelas bahwa kondisi cuaca sangat memengaruhi keputusan pengguna dalam menyewa sepeda.")
-
-st.write("Cuaca Cerah memiliki jumlah penyewaan tertinggi, dengan rata-rata sekitar 390 sepeda per hari. Hal ini menunjukkan bahwa pengguna lebih aktif menyewa sepeda saat cuaca mendukung aktivitas luar ruangan.")
-st.write("Cuaca Berkabut juga menunjukkan angka penyewaan yang tinggi, hanya sedikit di bawah cuaca cerah, mengindikasikan bahwa kabut tidak menjadi hambatan signifikan dalam penyewaan sepeda.")
-st.write("Hujan Ringan menyebabkan penurunan jumlah penyewaan yang cukup signifikan dibandingkan kondisi cerah atau berkabut.")
-st.write("Hujan Lebat memiliki jumlah penyewaan terendah, dengan rata-rata di bawah 80 sepeda per hari, yang menunjukkan bahwa kondisi ini sangat menghambat aktivitas penyewaan.")
-
-st.write("📌 Insight:")
-st.write("Dari pola ini, terlihat bahwa cuaca menjadi faktor utama dalam keputusan penyewaan sepeda. Bisnis penyewaan sepeda dapat mempertimbangkan strategi seperti promosi atau diskon saat cuaca buruk untuk tetap menarik pengguna. Selain itu, informasi prakiraan cuaca dapat digunakan untuk mengelola stok sepeda dengan lebih optimal.")
-
-
-st.write("- 2: Perbandingan Penyewaan Sepeda di Hari Kerja dan Akhir Pekan")
-st.write("Analisis jumlah penyewaan sepeda berdasarkan hari kerja dan akhir pekan menunjukkan pola berikut:")
-
-st.write("Hari Kerja → Rata-rata penyewaan sepeda tercatat sekitar 4.458 unit per hari, sedikit lebih rendah dibandingkan akhir pekan.")
-st.write("Akhir Pekan → Jumlah penyewaan meningkat menjadi 4.620 unit per hari, mengindikasikan adanya kenaikan meskipun selisihnya tidak terlalu besar.")
-st.write("Selisih → Perbedaan antara hari kerja dan akhir pekan berkisar 162 sepeda per hari, dengan tren yang menunjukkan bahwa akhir pekan memiliki tingkat penyewaan yang lebih tinggi.")
-
-st.write("📌 Insight:")
-st.write("Meskipun diasumsikan bahwa hari kerja akan memiliki lebih banyak penyewaan karena penggunaan sepeda sebagai alat transportasi ke tempat kerja, data menunjukkan bahwa akhir pekan justru mencatat jumlah penyewaan yang lebih tinggi. Hal ini kemungkinan besar disebabkan oleh aktivitas rekreasi atau wisata. Oleh karena itu, penyedia layanan dapat mempertimbangkan strategi pemasaran khusus, seperti paket diskon atau peningkatan jumlah sepeda pada akhir pekan untuk mengakomodasi lonjakan permintaan.")
-
 
 
 
