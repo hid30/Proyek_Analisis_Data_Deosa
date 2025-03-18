@@ -88,8 +88,6 @@ ax.pie(values, labels=labels, autopct='%1.1f%%', colors=["blue", "orange"])
 ax.set_title("Distribusi Peminjaman Sepeda pada Hari Kerja vs Akhir Pekan")
 st.pyplot(fig)
 
-
-
 # Assessing Data: Cek informasi dataset
 print("\nInformasi Dataset:")
 print(df.info())
@@ -204,3 +202,5 @@ st.write("Selisih → Perbedaan antara hari kerja dan akhir pekan berkisar 162 s
 
 st.write("📌 Insight:")
 st.write("Meskipun diasumsikan bahwa hari kerja akan memiliki lebih banyak penyewaan karena penggunaan sepeda sebagai alat transportasi ke tempat kerja, data menunjukkan bahwa akhir pekan justru mencatat jumlah penyewaan yang lebih tinggi. Hal ini kemungkinan besar disebabkan oleh aktivitas rekreasi atau wisata. Oleh karena itu, penyedia layanan dapat mempertimbangkan strategi pemasaran khusus, seperti paket diskon atau peningkatan jumlah sepeda pada akhir pekan untuk mengakomodasi lonjakan permintaan.")
+
+
