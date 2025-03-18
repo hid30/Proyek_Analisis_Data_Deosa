@@ -48,11 +48,6 @@ with tab4:
 
 
 
-
-
-df['dteday'] = pd.to_datetime(df['dteday'])
-df['month'] = df['dteday'].dt.month
-
 st.title("Analisis Lanjutan")
 
 # Pertanyaan 3: Bagaimana distribusi jumlah penyewaan sepeda sepanjang hari?
