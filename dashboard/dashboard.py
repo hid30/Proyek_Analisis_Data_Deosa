@@ -1,47 +1,67 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Konfigurasi tema
 st.set_page_config(page_title="Bike Sharing Dashboard", layout="wide", page_icon="🚲")
 
 # Load data
-df = pd.read_csv('all_data.csv')
+df = pd.read_csv('day.csv')
 df['weather_desc'] = df['weathersit'].map({1: 'Cerah', 2: 'Berkabut', 3: 'Hujan Ringan', 4: 'Hujan Berat'})
 df['is_weekend'] = df['weekday'].apply(lambda x: 'Weekend' if x >= 5 else 'Weekday')
 
-
-# Sidebar
+# Sidebar untuk filter
 st.sidebar.title("Filter Data")
-weather_options = df['weather'].unique()
-selected_weather = st.sidebar.multiselect("Pilih Kondisi Cuaca", weather_options, default=weather_options)
+weather_filter = st.sidebar.multiselect(
+    "Pilih Kondisi Cuaca", 
+    options=df['weather_desc'].unique(), 
+    default=df['weather_desc'].unique()
+)
+day_filter = st.sidebar.multiselect(
+    "Pilih Tipe Hari", 
+    options=['Weekday', 'Weekend'], 
+    default=['Weekday', 'Weekend']
+)
 
-day_type = st.sidebar.radio("Pilih Jenis Hari", ["Hari Kerja", "Akhir Pekan", "Semua"], index=2)
+# Filter dataset berdasarkan pilihan
+filtered_df = df[df['weather_desc'].isin(weather_filter) & df['is_weekend'].isin(day_filter)]
 
-# Filter data berdasarkan pilihan
-filtered_df = df[df['weather'].isin(selected_weather)]
-if day_type == "Hari Kerja":
-    filtered_df = filtered_df[df['weekday'].isin([0, 1, 2, 3, 4])]
-elif day_type == "Akhir Pekan":
-    filtered_df = filtered_df[df['weekday'].isin([5, 6])]
+# Judul utama
+st.title("🚲 Bike Sharing Dashboard")
+st.markdown("Analisis Penyewaan Sepeda Berdasarkan Cuaca dan Hari")
 
-# Dashboard Header
-st.title("Dashboard Penyewaan Sepeda")
-st.write("Analisis Pengaruh Cuaca terhadap Penyewaan Sepeda")
+# Metrik cepat
+col1, col2, col3 = st.columns(3)
+col1.metric("Total Penyewaan", f"{int(filtered_df['cnt'].sum()):,}")
+col2.metric("Rata-rata Harian", f"{int(filtered_df['cnt'].mean()):,}")
+col3.metric("Hari Tercatat", f"{len(filtered_df)}")
 
-# Grafik 1: Tren Penyewaan Sepeda
-st.subheader("Tren Penyewaan Sepeda")
-fig1 = px.line(filtered_df, x="date", y="count", title="Jumlah Penyewaan Sepeda Harian", labels={"count": "Jumlah Penyewaan", "date": "Tanggal"})
-st.plotly_chart(fig1)
+# Visualisasi 1: Pengaruh Cuaca
+st.subheader("📊 Pengaruh Cuaca terhadap Penyewaan")
+weather_group = filtered_df.groupby('weather_desc')['cnt'].mean().reset_index()
+fig1, ax1 = plt.subplots(figsize=(10, 5))
+sns.barplot(x='weather_desc', y='cnt', data=weather_group, palette='viridis', ax=ax1)
+ax1.set_title('Rata-rata Penyewaan Berdasarkan Cuaca', fontsize=14, pad=10)
+ax1.set_xlabel('Kondisi Cuaca', fontsize=12)
+ax1.set_ylabel('Jumlah Penyewaan (Rata-rata)', fontsize=12)
+plt.xticks(rotation=45)
+st.pyplot(fig1)
 
-# Grafik 2: Distribusi Penyewaan Berdasarkan Cuaca
-st.subheader("Pengaruh Cuaca terhadap Penyewaan Sepeda")
-fig2 = px.box(filtered_df, x="weather", y="count", title="Distribusi Penyewaan Berdasarkan Cuaca", labels={"weather": "Kondisi Cuaca", "count": "Jumlah Penyewaan"})
-st.plotly_chart(fig2)
+# Visualisasi 2: Weekday vs Weekend
+st.subheader("📊 Penyewaan: Weekday vs Weekend")
+day_group = filtered_df.groupby('is_weekend')['cnt'].mean().reset_index()
+fig2, ax2 = plt.subplots(figsize=(10, 5))
+sns.barplot(x='is_weekend', y='cnt', data=day_group, palette='magma', ax=ax2)
+ax2.set_title('Rata-rata Penyewaan: Weekday vs Weekend', fontsize=14, pad=10)
+ax2.set_xlabel('Tipe Hari', fontsize=12)
+ax2.set_ylabel('Jumlah Penyewaan (Rata-rata)', fontsize=12)
+st.pyplot(fig2)
 
-# Grafik 3: Perbandingan Hari Kerja vs Akhir Pekan
-st.subheader("Perbandingan Pola Penyewaan")
-fig3 = px.bar(filtered_df, x="weekday", y="count", title="Pola Penyewaan Sepeda di Hari Kerja dan Akhir Pekan", labels={"weekday": "Hari", "count": "Jumlah Penyewaan"}, color="weekday")
-st.plotly_chart(fig3)
+# Tabel ringkasan (opsional)
+st.subheader("📋 Ringkasan Data")
+st.dataframe(weather_group.style.format({"cnt": "{:,.0f}"}))
 
-st.write("\n\n**Dashboard ini membantu memahami pola penyewaan sepeda berdasarkan cuaca dan jenis hari.**")
+# Footer
+st.markdown("---")
+st.markdown("Dibuat dengan ❤️ menggunakan Streamlit | Data: Bike Sharing Dataset")
